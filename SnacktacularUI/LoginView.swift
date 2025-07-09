@@ -23,7 +23,13 @@ struct LoginView: View {
             
             Group {
                 TextField("email", text: $email)
+                    .keyboardType(.emailAddress)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+                    .submitLabel(.next)
+                
                 SecureField("password", text: $password)
+                    .submitLabel(.done)
             }
             .textFieldStyle(.roundedBorder)
             .overlay {
@@ -33,11 +39,11 @@ struct LoginView: View {
             
             HStack {
                 Button("Sign Up") {
-                    //TODO: Action here
+                    register()
                 }
                 .padding(.trailing)
                 Button("Log In") {
-                    //TODO: Action here
+                    login()
                 }
                 .padding(.leading)
             }
@@ -55,8 +61,8 @@ struct LoginView: View {
     func register() {
         Auth.auth().createUser(withEmail: email, password: password) { result, error in
             if let error = error {
-                print("😡 LOGIN ERROR: \(error.localizedDescription)")
-                alertMessage = "😡 LOGIN ERROR: \(error.localizedDescription)"
+                print("😡 SIGNUP ERROR: \(error.localizedDescription)")
+                alertMessage = "😡 SIGNUP ERROR: \(error.localizedDescription)"
                 showingAlert = true
             } else {
                 print("😎 Registration success!")
@@ -64,6 +70,20 @@ struct LoginView: View {
             }
         }
     }
+    
+    func login() {
+        Auth.auth().signIn(withEmail: email, password: password) { result, error in
+            if let error = error {
+                print("😡 LOGIN ERROR: \(error.localizedDescription)")
+                alertMessage = "😡 LOGIN ERROR: \(error.localizedDescription)"
+                showingAlert = true
+            } else {
+                print("🪵 Login success!")
+                //TODO: Load ListView
+            }
+        }
+    }
+    
 }
 
 #Preview {
